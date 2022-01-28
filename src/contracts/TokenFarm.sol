@@ -11,8 +11,8 @@ contract TokenFarm {
 
     address[] public stakers;
     mapping(address => uint) public stakingBalance;
-    mapping(address => bool) public hasStaked;
-    mapping(address => bool) public isStaking;
+    mapping(address => bool) public hasStaked; //스테이킹을 한 적이 있는지
+    mapping(address => bool) public isStaking; //현재 스테이킹 하고 있는지
 
     constructor(DappToken _dappToken, DaiToken _daiToken) public {
         dappToken = _dappToken; // Dapp컨트랙트 주소할당
@@ -20,12 +20,13 @@ contract TokenFarm {
         owner = msg.sender;
     }
 
+    // Stakes Tokens (Deposit)
     function stakeTokens(uint _amount) public {
         // Require amount greater than 0
         require(_amount > 0, "amount cannot be 0");
 
         // Trasnfer Mock Dai tokens to this contract for staking
-        daiToken.transferFrom(msg.sender, address(this), _amount);
+        daiToken.transferFrom(msg.sender, address(this), _amount); //권한 부여 필요한 transfer함수
 
         // Update staking balance
         stakingBalance[msg.sender] = stakingBalance[msg.sender] + _amount;
@@ -35,7 +36,7 @@ contract TokenFarm {
             stakers.push(msg.sender);
         }
 
-        // Update staking status
+        // Update staking status 
         isStaking[msg.sender] = true;
         hasStaked[msg.sender] = true;
     }
